@@ -53,7 +53,7 @@ def main(source, target, database):
                 titlepath = titlepath + " ** " + str(pagetitle[0])
 
             #database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
-             #                    titlepath)
+                                #titlepath)
         return len(paths)
 
 

@@ -18,6 +18,8 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+counter = 0
+
 
 # Connect to the SDOW database and the results database.
 database1 = config.THREAD_1_DATABASE_CON
@@ -36,10 +38,22 @@ class WikiparserWorker(Thread):
         self.database = database
 
     def run(self):
+        global counter
         while True:
             pages = self.queue.get()
             try:
-                calculate_paths.main(pages[0], pages[1], self.database)
+                pathamount = calculate_paths.main(pages[0], pages[1], self.database)
+
+                oldcounter = counter
+                # catch the possible type error in the case of no paths found between wikipedia pages
+                try:
+                    counter = counter + pathamount
+
+                except TypeError:
+                    counter = oldcounter
+                finally:
+                    print("paths processed: " + str(counter))
+
             finally:
                 self.queue.task_done()
 
@@ -49,11 +63,14 @@ class WikiparserWorker(Thread):
 
 
 def main():
+
+    global counter
+    counter = 0
     ts = time()
 
     print("Setting up multiple workers...")
 
-    counter = 0
+
 
     # create a queue to communicate with the worker threads
     queue = Queue()
@@ -61,6 +78,7 @@ def main():
 
     # create 4 worker threads
     for x in range(4):
+        #each of the worker gets its own database, so that they can work simultaneously
         worker = WikiparserWorker(queue, databaselist[x])
         # Setting daemon to True will let the main thread exit even though the workers are blocking
         worker.daemon = True
@@ -75,6 +93,10 @@ def main():
     #causes the main thread to wait for the queue to finish processing all the tasks
     queue.join()
     logging.info('Took %s', time() - ts)
+
+    print("time elapsed: " + str(time() - ts) + " seconds")
+    print("paths calculated: " + str(counter))
+    print("average time/path:" + str((time() - ts) / counter))
 
 
 

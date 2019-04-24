@@ -25,6 +25,11 @@ THREAD_4_DATABASE_CON = Database(sdow_database='./sdow4.sqlite', searches_databa
 
 def main():
 
+
+    #empty the list
+    global titlelist
+    titlelist = []
+
     #lets get 500 random pages from wikipedia web api
     S = requests.Session()
 

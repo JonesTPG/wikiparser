@@ -3,12 +3,13 @@ from database import Database
 
 import single
 import multiple_threads
-from config import DATABASE_CON
+import config
+
 
 
 class UI:
 
-    database = DATABASE_CON
+    database = config.DATABASE_CON
 
     def __init__(self):
         self.__main_window = Tk()
@@ -53,6 +54,13 @@ class UI:
         self.__emptytext4 = Label(self.__main_window, text="")
         self.__emptytext4.pack()
 
+        self._generatebutton = Button(self.__main_window, text="Generate new random pages",
+                                   command=self.generatepages)
+        self._generatebutton.pack()
+
+        self.__emptytext12 = Label(self.__main_window, text="")
+        self.__emptytext12.pack()
+
         self.__exitbutton = Button(self.__main_window, text="Exit program",
                             command=self.exit)
         self.__exitbutton.pack()
@@ -90,9 +98,16 @@ class UI:
 
         self.updateInfoText("program executed succesfully")
 
+    def generatepages(self):
+        self.updateInfoText("Generating new random pages...")
+        config.main()
+        self.updateInfoText("New random pages generated.")
+
     def runwithredis(self):
         self.updateInfoText("running with redis queue")
 
     def updateInfoText(self, newText):
         self.__infotext['text'] = newText
+
+
 
