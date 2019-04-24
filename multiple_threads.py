@@ -2,7 +2,11 @@ import logging
 import os
 from time import time
 from database import Database
-from helpers import InvalidRequest, fetch_wikipedia_pages_info
+from threading import Thread
+from queue import Queue
+
+import calculate_paths
+
 
 import config
 
@@ -11,28 +15,66 @@ try:
 except ImportError:
     Set = set
 
-
-
-
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-#this program executes with 8 threads
 
+# Connect to the SDOW database and the results database.
+database1 = config.THREAD_1_DATABASE_CON
+database2 = config.THREAD_2_DATABASE_CON
+database3 = config.THREAD_3_DATABASE_CON
+database4 = config.THREAD_4_DATABASE_CON
+
+databaselist = [database1, database2, database3, database4]
+# a class for the worker (extends the python Thread-class)
+
+class WikiparserWorker(Thread):
+
+    def __init__(self, queue, database):
+        Thread.__init__(self)
+        self.queue = queue
+        self.database = database
+
+    def run(self):
+        while True:
+            pages = self.queue.get()
+            try:
+                calculate_paths.main(pages[0], pages[1], self.database)
+            finally:
+                self.queue.task_done()
+
+
+
+#this program executes with 8 threads
 
 
 def main():
     ts = time()
 
-    print("Single thread calculation...")
-
-    # Connect to the SDOW database and the results database.
-    database = Database(sdow_database='./sdow.sqlite', searches_database='./result.sqlite')
+    print("Setting up multiple workers...")
 
     counter = 0
 
+    # create a queue to communicate with the worker threads
+    queue = Queue()
 
+
+    # create 4 worker threads
+    for x in range(4):
+        worker = WikiparserWorker(queue, databaselist[x])
+        # Setting daemon to True will let the main thread exit even though the workers are blocking
+        worker.daemon = True
+        worker.start()
+        # Put the pages to the queue as a tuple
+
+    for i in range(0, config.GLOBAL_PAGE_AMOUNT):
+        source = config.titlelist[i]
+        target = config.titlelist[i + 1]
+        queue.put((source, target))
+
+    #causes the main thread to wait for the queue to finish processing all the tasks
+    queue.join()
+    logging.info('Took %s', time() - ts)
 
 
 

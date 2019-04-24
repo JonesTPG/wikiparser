@@ -27,7 +27,7 @@ def main():
     print("Single thread calculation...")
 
     # Connect to the SDOW database and the results database.
-    database = Database(sdow_database='./sdow.sqlite', searches_database='./result.sqlite')
+    database = config.DATABASE_CON
 
     counter = 0
 
@@ -51,7 +51,9 @@ def main():
 
 
 
-
+    print("time elapsed: " + str(time()-ts) + " seconds")
+    print("paths calculated: " + str(counter))
+    print("average time/path:" + str( (time()-ts) / counter ))
 
 
 

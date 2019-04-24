@@ -1,7 +1,7 @@
 import logging
 import os
 from time import time
-from database import Database
+
 from helpers import InvalidRequest, fetch_wikipedia_pages_info
 
 import config
@@ -13,10 +13,10 @@ except ImportError:
 
 
 # module that calculates the shortest path for the given pages
-# the single.py will run this module and calculate the paths one by one
-
+# the multiple_threads.py will run this module
 
 def main(source, target, database):
+
 
     ts = time()
 
@@ -46,14 +46,15 @@ def main(source, target, database):
 
     # Paths found
     else:
+
         titlepath = ""
+
         for path in paths:
+
             for pageid in path:
                 pagetitle = database.getName(pageid);
                 titlepath = titlepath + " ** " + str(pagetitle[0])
 
-            #database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
-             #                    titlepath)
         return len(paths)
 
 
