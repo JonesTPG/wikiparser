@@ -1,0 +1,10 @@
+CREATE TABLE result
+(
+    id SERIAL PRIMARY KEY,
+    source_page_id VARCHAR(30),
+    source_page_title VARCHAR(30),
+    goal_page_id VARCHAR(30),
+    goal_page_title VARCHAR(30),
+    distance NUMBER,
+    path varchar(1000)
+);
