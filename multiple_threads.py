@@ -22,3 +22,21 @@ logger = logging.getLogger(__name__)
 
 
 
+def main():
+    ts = time()
+
+    print("Single thread calculation...")
+
+    # Connect to the SDOW database and the results database.
+    database = Database(sdow_database='./sdow.sqlite', searches_database='./result.sqlite')
+
+    counter = 0
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    main()

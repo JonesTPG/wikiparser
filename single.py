@@ -5,6 +5,7 @@ from database import Database
 from helpers import InvalidRequest, fetch_wikipedia_pages_info
 
 import config
+import calculate_paths
 
 try:
     from sets import Set
@@ -35,53 +36,18 @@ def main():
         source = config.titlelist[i]
         target = config.titlelist[i+1]
 
-        # Look up the IDs for each page
+        pathamount = calculate_paths.main(source, target, database)
+
+        oldcounter = counter
+
+        #catch the possible type error in the case of no paths found between wikipedia pages
         try:
-            (source_page_id, source_page_title,
-             is_source_redirected) = database.fetch_page(source)
-        except ValueError:
-            raise InvalidRequest(
-                'Start page "{0}" does not exist. Please try another search.'.format(
-                    source.encode('utf-8')))
+            counter = counter + pathamount
 
-        try:
-            (target_page_id, target_page_title,
-             is_target_redirected) = database.fetch_page(target)
-        except ValueError:
-            raise InvalidRequest(
-                'End page "{0}" does not exist. Please try another search.'.format(target.encode('utf-8')))
-
-        logging.info('Took %s seconds', time() - ts)
-
-        paths = database.compute_shortest_paths(source_page_id, target_page_id)
-
-        # No paths found
-        if len(paths) == 0:
-            logging.warn('No paths found from {0} to {1}'.format(source_page_id, target_page_id))
-
-        #Paths found
-        else:
-
-            titlepath = "";
-
-
-
-            for path in paths:
-                #print("PATH FROM " + source + " TO " + target)
-
-                counter=counter+1
-
-                print("paths processed: " + str(counter))
-
-
-                for pageid in path:
-                    pagetitle = database.getName(pageid);
-                    titlepath = titlepath + " ** " + str(pagetitle[0])
-                    #print("page id: "  + str(pageid) + ": " + str(pagetitle[0]))
-                #print("\n\n")
-
-                database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path), titlepath)
-                #print(titlepath)
+        except TypeError:
+            counter = oldcounter
+        finally:
+            print("paths processed: " + str(counter))
 
 
 

@@ -49,14 +49,13 @@ def main(source, target, database):
     # Paths found
     else:
 
-        titlepath = "";
+        titlepath = ""
 
         for path in paths:
             # print("PATH FROM " + source + " TO " + target)
 
-            counter = counter + 1
 
-            print("paths processed: " + str(counter))
+
 
             for pageid in path:
                 pagetitle = database.getName(pageid);
@@ -67,5 +66,9 @@ def main(source, target, database):
             database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
                                  titlepath)
             # print(titlepath)
+
+
+        return len(paths)
+
 
 
