@@ -1,7 +1,7 @@
 import logging
 import os
 from time import time
-
+from database import Database
 from helpers import InvalidRequest, fetch_wikipedia_pages_info
 
 import config
@@ -13,10 +13,10 @@ except ImportError:
 
 
 # module that calculates the shortest path for the given pages
-# the multiple_threads.py will run this module
+# the multiple_threads.py will run this module and calculate paths simultaneously
+
 
 def main(source, target, database):
-
 
     ts = time()
 
@@ -46,15 +46,17 @@ def main(source, target, database):
 
     # Paths found
     else:
-
         titlepath = ""
-
         for path in paths:
-
             for pageid in path:
                 pagetitle = database.getName(pageid);
                 titlepath = titlepath + " ** " + str(pagetitle[0])
 
+            #the multi-threaded version can't use the function below, because the database cannot handle simultaneous
+            #write operations...
+
+            #database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
+                                #titlepath)
         return len(paths)
 
 

@@ -15,10 +15,12 @@ except ImportError:
 
 
 # module that calculates the shortest path for the given pages
-# the single.py will run this module and calculate the paths one by one
+# this module will be used by redis queue
 
 
-def main(source, target, database):
+def main(source, target):
+
+    database = config.DATABASE_CON
 
     ts = time()
 
@@ -51,13 +53,13 @@ def main(source, target, database):
         titlepath = ""
         for path in paths:
             for pageid in path:
-                pagetitle = database.getName(pageid);
+                pagetitle = database.getName(pageid)
                 titlepath = titlepath + " ** " + str(pagetitle[0])
 
 
             database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
-                                 titlepath)
-        return len(paths)
+                                titlepath)
+        #return len(paths)
 
 
 

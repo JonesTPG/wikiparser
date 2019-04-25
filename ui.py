@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 from tkinter import *
 from database import Database
 
 import single
 import multiple_threads
+import redis_queue
 import config
 
 
@@ -31,13 +34,13 @@ class UI:
         self.__emptytext2 = Label(self.__main_window, text="")
         self.__emptytext2.pack()
 
-        self.__run_multiple_processes_button = Button(self.__main_window,
-                                                    text="Run system with multiple workers (4 processes)",
-                                                    command=self.runprocesses)
-        self.__run_multiple_processes_button.pack()
+        #self.__run_multiple_processes_button = Button(self.__main_window,
+                                                    #text="Run system with multiple workers (4 processes)",
+                                                   # command=self.runprocesses)
+        #self.__run_multiple_processes_button.pack()
 
-        self.__emptytext7 = Label(self.__main_window, text="")
-        self.__emptytext7.pack()
+        #self.__emptytext7 = Label(self.__main_window, text="")
+        #self.__emptytext7.pack()
 
 
         self.__run_with_redis = Button(self.__main_window, text="Run system with redis queue (under development)",
@@ -91,12 +94,12 @@ class UI:
     def runthreads(self):
         self.updateInfoText("running with 4 threads.")
         multiple_threads.main()
-        self.updateInfoText("program executed succesfully")
+        self.updateInfoText("program executed succesfully.")
 
     def runprocesses(self):
         self.updateInfoText("running with 4 separate processes.")
 
-        self.updateInfoText("program executed succesfully")
+        self.updateInfoText("program executed succesfully.")
 
     def generatepages(self):
         self.updateInfoText("Generating new random pages...")
@@ -105,6 +108,8 @@ class UI:
 
     def runwithredis(self):
         self.updateInfoText("running with redis queue")
+        redis_queue.main()
+        self.updateInfoText("program executed succesfully.")
 
     def updateInfoText(self, newText):
         self.__infotext['text'] = newText

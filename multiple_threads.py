@@ -5,7 +5,7 @@ from database import Database
 from threading import Thread
 from queue import Queue
 
-import calculate_paths
+import calculate_paths_parallel
 
 
 import config
@@ -42,7 +42,7 @@ class WikiparserWorker(Thread):
         while True:
             pages = self.queue.get()
             try:
-                pathamount = calculate_paths.main(pages[0], pages[1], self.database)
+                pathamount = calculate_paths_parallel.main(pages[0], pages[1], self.database)
 
                 oldcounter = counter
                 # catch the possible type error in the case of no paths found between wikipedia pages
