@@ -50,15 +50,16 @@ def main(source, target):
 
     # Paths found
     else:
-        titlepath = ""
+
         for path in paths:
+            titlepath = ""
             for pageid in path:
-                pagetitle = database.getName(pageid)
+                pagetitle = database.getName2(pageid)
                 titlepath = titlepath + " ** " + str(pagetitle[0])
 
 
-            database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
-                                titlepath)
+            #database.save_result(source_page_id, source_page_title, target_page_id, target_page_title, len(path),
+             #                   titlepath)
         #return len(paths)
 
 

@@ -48,8 +48,9 @@ def main(source, target, database):
 
     # Paths found
     else:
-        titlepath = ""
+
         for path in paths:
+            titlepath = ""
             for pageid in path:
                 pagetitle = database.getName(pageid);
                 titlepath = titlepath + " ** " + str(pagetitle[0])

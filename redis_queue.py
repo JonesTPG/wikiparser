@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pickle
+pickle.HIGHEST_PROTOCOL = 2
 
 import logging
 import os

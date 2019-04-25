@@ -243,6 +243,15 @@ class Database(object):
     page_title = self.sdow_cursor.fetchone()
     return page_title
 
+  def getName2(self, id):
+
+    query = 'SELECT title FROM pages WHERE id = ?;'
+    query_bindings = (id,)
+    self.sdow_cursor.execute(query, query_bindings)
+
+    page_title = self.sdow_cursor.fetchone()
+    return str(page_title)
+
 
   def save_result(self, source_id, source_title, target_id, target_title, distance, path):
 
